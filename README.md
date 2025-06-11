@@ -9,3 +9,15 @@ conda accitvate lc_env
 -작업디렉토리 이동
 cd lnagchaon_pjt
 ```
+
+- 마크다운
+pip install tabulate
+
+- 웹 backend, frontend 개발
+pip install streamlit
+
+# 실행 방법
+```
+streamlit run main_app.py
+
+```
