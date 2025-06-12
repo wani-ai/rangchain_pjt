@@ -8,26 +8,34 @@ class Stock:
         self.ticker = yf.Ticker(symbol)
 
 #회사 기본 정보
+ # 회사 정보 수집함수(메서드), 마크다운 변형
     def get_basic_info(self):
-        self.df_dict = pd.DataFrame.from_dict(self.ticker.info, orient='index', columns='Values')
+        basic_info = pd.DataFrame.from_dict(self.ticker.info, orient='index', columns=['Value'])
         basic_info = basic_info.loc[['longName', 'marketCap', 'industry', 'sector', 'fullTimeEmployees', 'currentPrice', 'enterpriseValue']]
         return basic_info
 
+ # 재무제표 수집 함수
     def get_financial_statement(self):
-        #재무제표 수집
+        # 재무제표 최근 4년, 마크다운 형식으로 변환
         income_stmt = self.ticker.income_stmt.loc[['Total Revenue', 'Gross Profit', 
-                                                        'Operating Income', 'Net Income']].iloc[:, :4].to_markdown()
+                                                     'Operating Income', 'Net Income']].iloc[:, :4].to_markdown()
         # 대차대조표를 마크다운 형식으로 변환
         balance_sheet = self.ticker.balance_sheet.loc[['Total Assets', 
-                                                        'Total Liabilities Net Minority Interest',
-                                                        'Stockholders Equity']].iloc[:, :4].to_markdown()
+                                                       'Total Liabilities Net Minority Interest',
+                                                       'Stockholders Equity']].iloc[:, :4].to_markdown()
         # 현금 흐름표를 마크다운 형식으로 변환
         cash_flow = self.ticker.cashflow.loc[['Operating Cash Flow', 
-                                                'Investing Cash Flow',
-                                                'Financing Cash Flow']].iloc[:, :4].to_markdown()
+                                              'Investing Cash Flow',
+                                              'Financing Cash Flow']].iloc[:, :4].to_markdown()
+        print(income_stmt)
         return f"""
-        {income_stmt}{balance_sheet}{cash_flow}
-    """
+            ### 손익계산서
+            {income_stmt}
+            ### 대차대조표
+            {balance_sheet}
+            ### 현금 흐름표
+            {cash_flow}
+        """
     # 주식 거래량
     def get_stock_volume(self):
             # 최근 3개월간의 거래량을 가져옴
@@ -47,6 +55,6 @@ if __name__=="__main__":
     # print(stock.get_stock_volume())  
 
     # 회사 이름
-    compay_name="AAPL"
+    # compay_name="AAPL"
 
 

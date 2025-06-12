@@ -21,3 +21,11 @@ pip install streamlit
 streamlit run main_app.py
 
 ```
+
+# meilisearch 이용
+```
+
+./meilisearch--master-key="api-key" 
+링크
+https://www.meilisearch.com/docs/learn/self_hosted/getting_started_with_self_hosted_meilisearch
+```

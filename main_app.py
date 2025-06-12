@@ -1,14 +1,21 @@
 import streamlit as st
 from report_service import investment_report
-from search_index import SearchResult, search_compay
 from stock_info import Stock
-
-
+from search_index import search_company, SearchResult
 
 st.title("AI 투자 보고서 생성 서비스")
-serrch_query = st.text_input("회사명", "AAPL")
-company_list = ["AAPL: Apple Inc","APLE: Apple Hospitality REIT Inc"]
-company_selected = st.selectbox("회사 선택", company_list, index=0)
+search_symbol = st.text_input("회사 심볼", "AAPL")
+# company_list = ["AAPL: Apple Inc","APLE: Apple Hospitality REIT Inc"]
+
+company_info = search_company(search_symbol)
+hits = company_info['hits']
+company_list = [SearchResult(hit) for hit in hits]
+
+company_selected = st.selectbox("회사명 선택", company_list, index=0)
+# print(company_selected)
+# print(search_symbol)
+
+#회사 이름
 
 tabs = ["주식 정보", "투자 보고서"]
 tab1, tab2 = st.tabs (tabs)
@@ -16,8 +23,8 @@ tab1, tab2 = st.tabs (tabs)
 #
 with tab1:
     st.header(f"{company_selected}의 6개월 주식 거래량")
-    stock = Stock(company_selected.symbol)
-    volume = Stock.get_stock_volume()
+    stock = Stock(search_symbol)
+    volume = stock.get_stock_volume()
     st.line_chart(volume, use_container_width=True)
 
 #LLM이 만든 투자 보고서 출력
@@ -26,6 +33,6 @@ with tab2:
 
     if st.button("투자 보고서 생성"):
         with st.spinner(text="투자 보고서 생성 중..."):
-            report = investment_report(company_selected.name, company_selected.symbol)
+            report = investment_report(search_symbol, company_selected)
             st.success("투자 보고서 생성 완료!")            
         st.write(report)
